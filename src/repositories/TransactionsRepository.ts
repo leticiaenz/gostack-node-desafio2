@@ -1,10 +1,10 @@
 import Transaction from '../models/Transaction';
 
-interface Balance {
-  income: number;
-  outcome: number;
-  total: number;
-}
+// interface Balance {
+//   income: number;
+//   outcome: number;
+//   total: number;
+// }
 
 class TransactionsRepository {
   private transactions: Transaction[];
@@ -14,15 +14,18 @@ class TransactionsRepository {
   }
 
   public all(): Transaction[] {
-    // TODO
+    return this.transactions;
   }
 
-  public getBalance(): Balance {
-    // TODO
-  }
+  // public getBalance(): Balance {
+  //   // TODO
+  // }
 
-  public create(): Transaction {
-    // TODO
+  public create(title: string, value: number, type: string): Transaction {
+    const transaction = new Transaction(title, value, type);
+
+    this.transactions.push(transaction);
+    return transaction;
   }
 }
 
