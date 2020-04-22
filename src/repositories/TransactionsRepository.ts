@@ -1,5 +1,8 @@
 import Transaction from '../models/Transaction';
 
+const typeIncome = 'income';
+const typeOutcome = 'outcome';
+
 interface CreateTransactionDTO {
   title: string;
   value: number;
@@ -27,23 +30,24 @@ class TransactionsRepository {
   public all(): AllTransactions {
     // pega os valores do balanço
     const balance = this.getBalance();
-    const allData = {
+
+    return {
       transactions: this.transactions,
       balance: balance,
     };
-
-    return allData;
   }
 
   public getBalance(): Balance {
     let income = 0;
     let outcome = 0;
 
-    this.transactions.map(function (item) {
-      if (item.type === 'income') {
+    this.transactions.map(item => {
+      if (item.type === typeIncome) {
         income = income + item.value;
       } else {
-        outcome = outcome + item.value;
+        if (item.type === typeOutcome) {
+          outcome = outcome + item.value;
+        }
       }
     });
 
@@ -55,6 +59,12 @@ class TransactionsRepository {
   }
 
   public create({ title, value, type }: CreateTransactionDTO): Transaction {
+    const resume = this.getBalance();
+
+    if (type == typeOutcome && resume.total < value) {
+      throw { message: 'Saldo Insuficiente' };
+    }
+
     const transaction = new Transaction({ title, value, type });
 
     this.transactions.push(transaction);

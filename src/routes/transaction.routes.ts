@@ -32,6 +32,7 @@ transactionRouter.post('/', (request, response) => {
 
     return response.json(transaction);
   } catch (err) {
+    console.log(err);
     return response.status(400).json({ error: err.message });
   }
 });
